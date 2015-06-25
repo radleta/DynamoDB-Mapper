@@ -5,7 +5,7 @@ A fast, easy to use Amazon DynamoDB to Javascript Object mapper.
 ## Installation
 
 ```bash
-$ npm install DynamoDB-Mapper
+$ npm install dynamodb-mapper
 ```
 
 ## Features
