@@ -1,0 +1,30 @@
+{
+  "name": "DynamoDB-Mapper",
+  "version": "0.0.0",
+  "description": "A fast, easy to use mapper to convert Amazon DynamoDB to and from Javascript Objects.",
+  "keywords": ["Amazon","aws-sdk","DynamoDB","Mapper","Data Mapper",""],
+  "homepage": "https://github.com/radleta/DynamoDB-Mapper",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/radleta/DynamoDB-Mapper.git"
+  },
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": { 
+    "name" : "Richard Adleta",
+    "email" : "radleta@gmail.com",
+    "url" : "http://blog.richardadleta.com/"
+  },
+  "license": "ISC",
+  "bugs": { 
+    "url" : "https://github.com/radleta/DynamoDB-Mapper/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4",
+    "chai": "^1.9.1"
+  }
+}
