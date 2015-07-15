@@ -9,6 +9,10 @@ describe('DateConverter', function () {
 	    	var expected = new Date();
 	    	assert.equal(expected.toISOString(), converter.serializeObject(expected))
 	    });
+	    it('successfully serialize date as string to ISO string', function () {
+	    	var expected = new Date().toISOString();
+	    	assert.equal(expected, converter.serializeObject(expected))
+	    });
 	});
 	
 	describe('deserializeObject', function() {

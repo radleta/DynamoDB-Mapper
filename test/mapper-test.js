@@ -50,6 +50,7 @@ describe('Mapper', function () {
   		}
     },
     juliet: { type: 'SS' },
+    dateAsNull: { type: 'D' },
   };
   var mapper = new Mapper(map);
 
@@ -87,6 +88,7 @@ describe('Mapper', function () {
       'abc123',
       'def456',
     ],
+    dateAsNull: null,
   };
   var expectedKey = {
     id: { S: '999' },
@@ -137,6 +139,7 @@ describe('Mapper', function () {
         'def456',
       ]
     },
+    dateAsNull: { NULL: true },
   };
   var expectedAttributeUpdates = {
     alpha: { Action: 'PUT', Value: { S: 'abc' } },
@@ -147,7 +150,55 @@ describe('Mapper', function () {
     //foxtrot: { BS: ['bin1', 'bin2'] }
     golf: { Action: 'PUT', Value: { S: dateValue.toISOString() } },
     hotel: { Action: 'PUT', Value: { S: JSON.stringify(expectedItem.hotel) } },
+    india: {
+        Action: "PUT",
+        Value: {
+            L: [
+                {
+                    M: {
+                        a: {
+                            N: "123"
+                        },
+                        b: {
+                            S: "abc"
+                        },
+                        c: {
+                            M: {
+                                d: {
+                                    N: "456"
+                                },
+                                e: {
+                                    S: "def"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    M: {
+                        a: {
+                            N: "123"
+                        },
+                        b: {
+                            S: "abc"
+                        },
+                        c: {
+                            M: {
+                                d: {
+                                    N: "456"
+                                },
+                                e: {
+                                    S: "def"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    },
     juliet: { Action: 'PUT', Value: { SS: expectedItem.juliet } },
+    dateAsNull: { Action: 'PUT', Value: { NULL: true } },
   };
   var expectedPutRequest = {
     PutRequest: {
@@ -160,36 +211,36 @@ describe('Mapper', function () {
     }
   };
 
-  // describe('fromAttributeValues', function () {
-  //   it('returns falsey when falsey data', function () {
-  //     assert(!mapper.fromAttributeValues(null));
-  //   });
-  //   it('successfully maps all expected values', function () {
-  //     var actual = mapper.fromAttributeValues(expectedAttributeValues);
-  //     assert.deepEqual(actual, expectedItem);
-  //   });
-  // });
+  describe('fromAttributeValues', function () {
+    it('returns falsey when falsey data', function () {
+      assert(!mapper.fromAttributeValues(null));
+    });
+    it('successfully maps all expected values', function () {
+      var actual = mapper.fromAttributeValues(expectedAttributeValues);
+      assert.deepEqual(actual, expectedItem);
+    });
+  });
 
   describe('toAttributeValues', function () {
     it('returns empty when falsey data', function () {
       assert(!mapper.toAttributeValues(null));
     });
     it('successfully maps all expected values', function () {
-      var dateValue = new Date();
       var actual = mapper.toAttributeValues(expectedItem);
       assert.deepEqual(actual, expectedAttributeValues);
     });
   });
 
-  // describe('toAttributeUpdates', function () {
-  //   it('returns empty when falsey data', function () {
-  //     assert(!mapper.toAttributeUpdates(null));
-  //   });
-  //   it('successfully maps all expected values', function () {
-  //     var actual = mapper.toAttributeUpdates(expectedItem);
-  //     assert.deepEqual(actual, expectedAttributeUpdates);
-  //   });
-  // });
+  describe('toAttributeUpdates', function () {
+    it('returns empty when falsey data', function () {
+      assert(!mapper.toAttributeUpdates(null));
+    });
+    it('successfully maps all expected values', function () {
+      var actual = mapper.toAttributeUpdates(expectedItem);
+      //console.log(JSON.stringify(actual, null, 4));
+      assert.deepEqual(actual, expectedAttributeUpdates);
+    });
+  });
 
   describe('toKey', function () {
     it('returns empty when falsey data', function () {
