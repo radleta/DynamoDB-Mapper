@@ -149,6 +149,16 @@ describe('Mapper', function () {
     hotel: { Action: 'PUT', Value: { S: JSON.stringify(expectedItem.hotel) } },
     juliet: { Action: 'PUT', Value: { SS: expectedItem.juliet } },
   };
+  var expectedPutRequest = {
+    PutRequest: {
+      Item: expectedAttributeValues
+    }
+  };
+  var expectedDeleteRequest = {
+    DeleteRequest: {
+      Key: expectedKey
+    }
+  };
 
   // describe('fromAttributeValues', function () {
   //   it('returns falsey when falsey data', function () {
@@ -188,6 +198,84 @@ describe('Mapper', function () {
     it('successfully maps all expected values', function () {
       var actual = mapper.toKey(expectedItem);
       assert.deepEqual(actual, expectedKey);
+    });
+  });
+  
+  describe('toPutRequests', function () {
+    it('returns empty when null', function () {
+      assert(mapper.toPutRequests(null).length===0);
+    });
+    it('returns empty when null', function () {
+      assert(mapper.toPutRequests([]).length===0);
+    });
+    it('returns empty when falsey', function () {
+      assert(mapper.toPutRequests(false).length===0);
+    });
+    it('successfully maps all expected values without preMap or postMap', function () {
+      var actual = mapper.toPutRequests([expectedItem, expectedItem, expectedItem]);
+      assert.deepEqual(actual, [expectedPutRequest, expectedPutRequest, expectedPutRequest]);
+    });
+    it('successfully maps all expected values with preMap or postMap', function () {
+      var inputItems = [expectedItem, expectedItem, expectedItem];
+      var expectedAttributeValues = [expectedPutRequest, expectedPutRequest, expectedPutRequest];
+      var preMapItems = [];
+      var postMapItems = [];
+      var postMapAttributeValues = [];
+      var actual = mapper.toPutRequests(inputItems, function (item) {   
+        preMapItems.push(item);
+        return item;
+      }, function (item, itemAttributeValues) {
+        postMapItems.push(item);
+        postMapAttributeValues.push({
+          PutRequest: {
+            Item: itemAttributeValues
+          }
+        });
+        return itemAttributeValues;
+      });
+      assert.deepEqual(actual, expectedAttributeValues);
+      assert.deepEqual(preMapItems, inputItems);
+      assert.deepEqual(postMapItems, inputItems);
+      assert.deepEqual(postMapAttributeValues, expectedAttributeValues);
+    });
+  });
+  
+  describe('toDeleteRequests', function () {
+    it('returns empty when null', function () {
+      assert(mapper.toDeleteRequests(null).length===0);
+    });
+    it('returns empty when null', function () {
+      assert(mapper.toDeleteRequests([]).length===0);
+    });
+    it('returns empty when falsey', function () {
+      assert(mapper.toDeleteRequests(false).length===0);
+    });
+    it('successfully maps all expected values without preMap or postMap', function () {
+      var actual = mapper.toDeleteRequests([expectedItem, expectedItem, expectedItem]);
+      assert.deepEqual(actual, [expectedDeleteRequest, expectedDeleteRequest, expectedDeleteRequest]);
+    });
+    it('successfully maps all expected values with preMap or postMap', function () {
+      var inputItems = [expectedItem, expectedItem, expectedItem];
+      var expectedAttributeValues = [expectedDeleteRequest, expectedDeleteRequest, expectedDeleteRequest];
+      var preMapItems = [];
+      var postMapItems = [];
+      var postMapAttributeValues = [];
+      var actual = mapper.toDeleteRequests(inputItems, function (item) {   
+        preMapItems.push(item);
+        return item;
+      }, function (item, itemKey) {
+        postMapItems.push(item);
+        postMapAttributeValues.push({
+          DeleteRequest: {
+            Key: itemKey
+          }
+        });
+        return itemKey;
+      });
+      assert.deepEqual(actual, expectedAttributeValues);
+      assert.deepEqual(preMapItems, inputItems);
+      assert.deepEqual(postMapItems, inputItems);
+      assert.deepEqual(postMapAttributeValues, expectedAttributeValues);
     });
   });
   
