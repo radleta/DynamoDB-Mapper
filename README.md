@@ -144,7 +144,7 @@ dynamodb.updateItem({
     }, function (getErr, getData) {
         if (getErr) {
             // do something dramatic because we errored
-            throw updateErr;
+            throw getErr;
         }
         
         // convert the DynamoDB item to Javascript Object
