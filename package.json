@@ -28,7 +28,9 @@
   "bugs": {
     "url": "https://github.com/radleta/DynamoDB-Mapper/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^3.10.0"
+  },
   "devDependencies": {
     "mocha": "^1.21.4",
     "chai": "^1.9.1"

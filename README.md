@@ -43,7 +43,7 @@ AWS SDK Data Type Documentation:
 var aws = require('aws-sdk');
 aws.config.loadFromPath('./config.json');
 var dynamodb = new aws.DynamoDB();
-var dynamodbMapper = require('DynamoDB-Mapper');
+var dynamodbMapper = require('dynamodb-mapper');
 
 // build your map
 var myMap = {
@@ -144,7 +144,7 @@ dynamodb.updateItem({
     }, function (getErr, getData) {
         if (getErr) {
             // do something dramatic because we errored
-            throw updateErr;
+            throw getErr;
         }
         
         // convert the DynamoDB item to Javascript Object
