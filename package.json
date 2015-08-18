@@ -1,6 +1,6 @@
 {
   "name": "dynamodb-mapper",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A fast, easy to use mapper to convert Amazon DynamoDB to and from Javascript Objects.",
   "keywords": [
     "Amazon",
