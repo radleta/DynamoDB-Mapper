@@ -50,6 +50,12 @@ describe('Mapper', function () {
   		}
     },
     juliet: { type: 'SS' },
+    kilo: {
+      type: 'L',
+      valueMap: {
+        type: 'S',
+      }
+    },
     dateAsNull: { type: 'D' },
   };
   var mapper = new Mapper(map);
@@ -88,6 +94,7 @@ describe('Mapper', function () {
       'abc123',
       'def456',
     ],
+    kilo: [],
     dateAsNull: null,
   };
   var expectedKey = {
@@ -138,6 +145,9 @@ describe('Mapper', function () {
         'abc123',
         'def456',
       ]
+    },
+    kilo: {
+      L: []
     },
     dateAsNull: { NULL: true },
   };
@@ -198,7 +208,8 @@ describe('Mapper', function () {
         }
     },
     juliet: { Action: 'PUT', Value: { SS: expectedItem.juliet } },
-    dateAsNull: { Action: 'PUT', Value: { NULL: true } },
+    kilo: { Action: 'DELETE' },
+    dateAsNull: { Action: 'DELETE' },
   };
   var expectedPutRequest = {
     PutRequest: {
