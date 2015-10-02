@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var Mapper = require('../lib/mapper');
 var assert = require('chai').assert;
 
@@ -25,6 +26,8 @@ describe('Mapper', function () {
     id: { type: 'S', hashKey: true },
     range: { type: 'S', rangeKey: true },
     alpha: { type: 'S' },
+    emptyString: { type: 'S' },
+    nullString: { type: 'S' },
     beta: { type: 'N' },
     //charlie: { type: 'B' },
     //delta: { type: 'SS' },
@@ -61,10 +64,12 @@ describe('Mapper', function () {
   var mapper = new Mapper(map);
 
   var dateValue = new Date();
-  var expectedItem = {
+  var inputItem = {
     id: '999',
     range: '511abc',
     alpha: 'abc',
+    emptyString: '',
+    nullString: null,
     beta: 123,
     //charlie: 'binary+data',
     //delta: ['def', 'ghi'],
@@ -97,6 +102,9 @@ describe('Mapper', function () {
     kilo: [],
     dateAsNull: null,
   };
+  var expectedItem = _.defaults({
+    emptyString: null,
+  }, inputItem);
   var expectedKey = {
     id: { S: '999' },
     range: { S: '511abc' },
@@ -105,6 +113,8 @@ describe('Mapper', function () {
     id: { S: '999' },
     range: { S: '511abc' },
     alpha: { S: 'abc' },
+    emptyString: { NULL: true },
+    nullString: { NULL: true },
     beta: { N: '123' },
     //charlie: { B: 'binary+data' },
     //delta: { SS: ['def', 'ghi'] },
@@ -153,6 +163,8 @@ describe('Mapper', function () {
   };
   var expectedAttributeUpdates = {
     alpha: { Action: 'PUT', Value: { S: 'abc' } },
+    emptyString: { Action: 'DELETE' },
+    nullString: { Action: 'DELETE' },
     beta: { Action: 'PUT', Value: { N: '123' } },
     //charlie: { B: 'binary+data' },
     //delta: { SS: ['def', 'ghi'] },
@@ -237,7 +249,7 @@ describe('Mapper', function () {
       assert(!mapper.toAttributeValues(null));
     });
     it('successfully maps all expected values', function () {
-      var actual = mapper.toAttributeValues(expectedItem);
+      var actual = mapper.toAttributeValues(inputItem);
       assert.deepEqual(actual, expectedAttributeValues);
     });
   });
@@ -247,7 +259,7 @@ describe('Mapper', function () {
       assert(!mapper.toAttributeUpdates(null));
     });
     it('successfully maps all expected values', function () {
-      var actual = mapper.toAttributeUpdates(expectedItem);
+      var actual = mapper.toAttributeUpdates(inputItem);
       //console.log(JSON.stringify(actual, null, 4));
       assert.deepEqual(actual, expectedAttributeUpdates);
     });
@@ -258,7 +270,7 @@ describe('Mapper', function () {
       assert.isObject(mapper.toKey(null));
     });
     it('successfully maps all expected values', function () {
-      var actual = mapper.toKey(expectedItem);
+      var actual = mapper.toKey(inputItem);
       assert.deepEqual(actual, expectedKey);
     });
   });
@@ -274,11 +286,11 @@ describe('Mapper', function () {
       assert(mapper.toPutRequests(false).length===0);
     });
     it('successfully maps all expected values without preMap or postMap', function () {
-      var actual = mapper.toPutRequests([expectedItem, expectedItem, expectedItem]);
+      var actual = mapper.toPutRequests([inputItem, inputItem, inputItem]);
       assert.deepEqual(actual, [expectedPutRequest, expectedPutRequest, expectedPutRequest]);
     });
     it('successfully maps all expected values with preMap or postMap', function () {
-      var inputItems = [expectedItem, expectedItem, expectedItem];
+      var inputItems = [inputItem, inputItem, inputItem];
       var expectedAttributeValues = [expectedPutRequest, expectedPutRequest, expectedPutRequest];
       var preMapItems = [];
       var postMapItems = [];
